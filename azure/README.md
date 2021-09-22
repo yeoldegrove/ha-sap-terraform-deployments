@@ -574,5 +574,23 @@ drbd_cluster_fencing_mechanism = "native"
 netweaver_cluster_fencing_mechanism = "native"
 ```
 
+## Use Hub/Spoke architecture together with FortiGate NGFW and FortiADC
+
+First of all, please get familiar with (Microsoft Azure's Hub/Spoke Architecture)[https://docs.microsoft.com/en-us/azure/developer/terraform/hub-spoke-introduction].
+
+A hub and spoke network and a bastion host that has ssh access to the spoke have to exist prior to running this terraform repo. This has to be deployed via terraform, too.
+
+To use this setup, set this in `terraform.tfvars`:
+
+```
+hub_spoke_architecture = true                         # this uses an existing bastion
+bastion_host = "X.X.X.X"                              # public IP of bastion host in hub network
+bastion_private_key = "/full/path/to/hub_id_rsa"       # ssh key to use to connect to bastion
+
+resource_group_name = "myresourcegroup"               # existing resource group
+vnet_name = "myvnet"                                  # existing spoke vnet
+subnet_name = "mysubnet"                              # existing spoke "workload" subnet
+```
+
 ## Extra info
 More info in [Azure's Terraform Create Complete VM Document](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-create-complete-vm).
