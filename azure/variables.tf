@@ -18,6 +18,18 @@ variable "vnet_name" {
   default     = ""
 }
 
+variable "vnet_hub_address_range" {
+  description = "vnet address range in CIDR notation (only used if the vnet is created by terraform or the user doesn't have read permissions in this resource. To use the current vnet address range set the value to an empty string)"
+  type        = string
+  default     = "10.73.0.0/16"
+  validation {
+    condition = (
+      can(regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.vnet_hub_address_range))
+    )
+    error_message = "Invalid IP range format. It must be something like: 102.168.10.5/24 ."
+  }
+}
+
 variable "vnet_address_range" {
   description = "vnet address range in CIDR notation (only used if the vnet is created by terraform or the user doesn't have read permissions in this resource. To use the current vnet address range set the value to an empty string)"
   type        = string
@@ -43,6 +55,78 @@ variable "subnet_address_range" {
   validation {
     condition = (
       var.subnet_address_range == "" || can(regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.subnet_address_range))
+    )
+    error_message = "Invalid IP range format. It must be something like: 102.168.10.5/24 ."
+  }
+}
+
+variable "subnet_mgmt_name" {
+  description = "Already existing subnet name used by the created infrastructure. If it's not set a new one will be created named snet-{{var.deployment_name/terraform.workspace}}"
+  type        = string
+  default     = ""
+}
+
+variable "subnet_mgmt_address_range" {
+  description = "subnet address range in CIDR notation (only used if the subnet is created by terraform or the user doesn't have read permissions in this resource. To use the current vnet address range set the value to an empty string)"
+  type        = string
+  default     = ""
+  validation {
+    condition = (
+      var.subnet_mgmt_address_range == "" || can(regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.subnet_mgmt_address_range))
+    )
+    error_message = "Invalid IP range format. It must be something like: 102.168.10.5/24 ."
+  }
+}
+
+variable "subnet_hub_gateway_name" {
+  description = "Already existing subnet name used by the created infrastructure. If it's not set a new one will be created named snet-{{var.deployment_name/terraform.workspace}}"
+  type        = string
+  default     = ""
+}
+
+variable "subnet_hub_gateway_address_range" {
+  description = "subnet address range in CIDR notation (only used if the subnet is created by terraform or the user doesn't have read permissions in this resource. To use the current vnet address range set the value to an empty string)"
+  type        = string
+  default     = ""
+  validation {
+    condition = (
+      var.subnet_hub_gateway_address_range == "" || can(regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.subnet_hub_gateway_address_range))
+    )
+    error_message = "Invalid IP range format. It must be something like: 102.168.10.5/24 ."
+  }
+}
+
+variable "subnet_hub_mgmt_name" {
+  description = "Already existing subnet name used by the created infrastructure. If it's not set a new one will be created named snet-{{var.deployment_name/terraform.workspace}}"
+  type        = string
+  default     = ""
+}
+
+variable "subnet_hub_mgmt_address_range" {
+  description = "subnet address range in CIDR notation (only used if the subnet is created by terraform or the user doesn't have read permissions in this resource. To use the current vnet address range set the value to an empty string)"
+  type        = string
+  default     = ""
+  validation {
+    condition = (
+      var.subnet_hub_mgmt_address_range == "" || can(regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.subnet_hub_mgmt_address_range))
+    )
+    error_message = "Invalid IP range format. It must be something like: 102.168.10.5/24 ."
+  }
+}
+
+variable "subnet_workload_name" {
+  description = "Already existing subnet name used by the created infrastructure. If it's not set a new one will be created named snet-{{var.deployment_name/terraform.workspace}}"
+  type        = string
+  default     = ""
+}
+
+variable "subnet_workload_address_range" {
+  description = "subnet address range in CIDR notation (only used if the subnet is created by terraform or the user doesn't have read permissions in this resource. To use the current vnet address range set the value to an empty string)"
+  type        = string
+  default     = ""
+  validation {
+    condition = (
+      var.subnet_workload_address_range == "" || can(regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.subnet_workload_address_range))
     )
     error_message = "Invalid IP range format. It must be something like: 102.168.10.5/24 ."
   }
@@ -99,6 +183,12 @@ variable "bastion_public_key" {
 
 variable "bastion_private_key" {
   description = "Content of a SSH private key or path to an already existing SSH private key to the bastion. If it's not set the key provided in private_key will be used"
+  type        = string
+  default     = ""
+}
+
+variable "bastion_host" {
+  description = "Bastion host address"
   type        = string
   default     = ""
 }
@@ -848,6 +938,36 @@ variable "fence_agent_app_id" {
 
 variable "fence_agent_client_secret" {
   description = "Secret for the azure service principal / application that is used for native fencing."
+  type        = string
+  default     = ""
+}
+
+variable "network_topology" {
+  description = "Network topolgy to use."
+  type        = string
+  default     = "plain"
+  validation {
+    condition = (
+      can(regex("^(hub_spoke|plain)$", var.network_topology))
+    )
+    error_message = "Invalid network topology. Options: plain|hub_spoke ."
+  }
+}
+
+variable "vnet_hub_create" {
+  description = "Create Hub Network"
+  type        = bool
+  default     = false
+}
+
+variable "vnet_hub_name" {
+  description = "Already existing virtual network name used by the created infrastructure. If it's not set a new one will be created named vnet-{{var.deployment_name/terraform.workspace}}"
+  type        = string
+  default     = ""
+}
+
+variable "spoke_name" {
+  description = "Name of Spoke Network to create (will be used in vnet and other resources)."
   type        = string
   default     = ""
 }

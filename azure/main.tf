@@ -16,6 +16,7 @@ module "local_execution" {
 # Netweaver virtual ips: 10.74.0.34, 10.74.0.35, 10.74.0.36, 10.74.0.37
 # If the addresses are provided by the user will always have preference
 locals {
+  bastion_host  = var.network_topology == "hub_spoke" && var.vnet_hub_create == false ? var.bastion_host : module.bastion.0.public_ip
   iscsi_ip      = var.iscsi_srv_ip != "" ? var.iscsi_srv_ip : cidrhost(local.subnet_address_range, 4)
   monitoring_ip = var.monitoring_srv_ip != "" ? var.monitoring_srv_ip : cidrhost(local.subnet_address_range, 5)
 
@@ -141,7 +142,7 @@ module "common_variables" {
 module "drbd_node" {
   source              = "./modules/drbd_node"
   common_variables    = module.common_variables.configuration
-  bastion_host        = module.bastion.public_ip
+  bastion_host        = local.bastion_host
   az_region           = var.az_region
   drbd_count          = var.drbd_enabled == true ? 2 : 0
   vm_size             = var.drbd_vm_size
@@ -169,7 +170,7 @@ module "drbd_node" {
 module "netweaver_node" {
   source                      = "./modules/netweaver_node"
   common_variables            = module.common_variables.configuration
-  bastion_host                = module.bastion.public_ip
+  bastion_host                = local.bastion_host
   az_region                   = var.az_region
   xscs_server_count           = local.netweaver_xscs_server_count
   app_server_count            = var.netweaver_enabled ? var.netweaver_app_server_count : 0
@@ -206,7 +207,7 @@ module "netweaver_node" {
 module "hana_node" {
   source                        = "./modules/hana_node"
   common_variables              = module.common_variables.configuration
-  bastion_host                  = module.bastion.public_ip
+  bastion_host                  = local.bastion_host
   az_region                     = var.az_region
   hana_count                    = var.hana_count
   vm_size                       = var.hana_vm_size
@@ -235,7 +236,7 @@ module "hana_node" {
 module "monitoring" {
   source              = "./modules/monitoring"
   common_variables    = module.common_variables.configuration
-  bastion_host        = module.bastion.public_ip
+  bastion_host        = local.bastion_host
   monitoring_enabled  = var.monitoring_enabled
   az_region           = var.az_region
   vm_size             = var.monitoring_vm_size
@@ -250,7 +251,7 @@ module "monitoring" {
 module "iscsi_server" {
   source              = "./modules/iscsi_server"
   common_variables    = module.common_variables.configuration
-  bastion_host        = module.bastion.public_ip
+  bastion_host        = local.bastion_host
   iscsi_count         = local.iscsi_enabled ? 1 : 0
   az_region           = var.az_region
   vm_size             = var.iscsi_vm_size
