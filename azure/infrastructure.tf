@@ -35,6 +35,7 @@ locals {
   # If vnet_name is defined, and the vnet_address_range is empty, it will try to get the ip range from the real vnet using the data source. If vnet_address_range is defined it will use it
   vnet_address_range   = var.vnet_name == "" ? var.vnet_address_range : (var.vnet_address_range == "" ? data.azurerm_virtual_network.mynet.0.address_space.0 : var.vnet_address_range)
   subnet_address_range = var.subnet_name == "" ? (var.subnet_address_range == "" ? cidrsubnet(local.vnet_address_range, 8, 1) : var.subnet_address_range) : (var.subnet_address_range == "" ? data.azurerm_subnet.mysubnet.0.address_prefix : var.subnet_address_range)
+  bastion_deploy       = var.bastion_host == "" ? true : false
 }
 
 # Azure resource group and storage account resources
@@ -261,6 +262,7 @@ resource "azurerm_network_security_group" "mysecgroup" {
 
 module "bastion" {
   source              = "./modules/bastion"
+  bastion_deploy      = local.bastion_deploy
   common_variables    = module.common_variables.configuration
   az_region           = var.az_region
   os_image            = local.bastion_os_image

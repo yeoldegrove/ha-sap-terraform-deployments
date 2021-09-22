@@ -103,6 +103,12 @@ variable "bastion_private_key" {
   default     = ""
 }
 
+variable "bastion_host" {
+  description = "Bastion host address"
+  type        = string
+  default     = ""
+}
+
 # Deployment variables
 
 variable "deployment_name" {
@@ -850,4 +856,10 @@ variable "fence_agent_client_secret" {
   description = "Secret for the azure service principal / application that is used for native fencing."
   type        = string
   default     = ""
+}
+
+variable "hub_spoke_architecture" {
+  description = "Use Hub/Spoke architecture (e.g. for fortinet deployment)"
+  type        = bool
+  default     = false
 }

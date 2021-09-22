@@ -53,6 +53,8 @@ locals {
   # a password in this case
   # Otherwise, the validation will fail unless a correct password is provided
   netweaver_master_password = var.netweaver_enabled ? var.netweaver_master_password : "DummyPassword1234"
+
+  bastion_host        = var.hub_spoke_architecture ? var.bastion_host : module.bastion.public_ip
 }
 
 module "common_variables" {

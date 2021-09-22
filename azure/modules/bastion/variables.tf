@@ -37,3 +37,8 @@ variable "storage_account" {
   description = "Storage account where the boot diagnostics will be stored"
   type = string
 }
+
+variable "bastion_deploy" {
+  description = "Deploy the bastion host (if enabled)."
+  type = bool
+}

@@ -1,5 +1,5 @@
 locals {
-  bastion_count      = var.common_variables["bastion_enabled"] ? 1 : 0
+  bastion_count      = var.common_variables["bastion_enabled"] && var.bastion_deploy ? 1 : 0
   private_ip_address = cidrhost(var.snet_address_range, 5)
 }
 
