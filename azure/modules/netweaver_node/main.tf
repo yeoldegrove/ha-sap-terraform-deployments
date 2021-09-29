@@ -352,6 +352,7 @@ resource "azurerm_virtual_machine" "netweaver" {
 
   tags = {
     workspace = var.common_variables["deployment_name"]
+    role      = "netweaver_node"
   }
 }
 
