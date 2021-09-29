@@ -119,6 +119,7 @@ resource "azurerm_virtual_machine" "monitoring" {
 
   tags = {
     workspace = var.common_variables["deployment_name"]
+    role = monitoring_srv
   }
 }
 
