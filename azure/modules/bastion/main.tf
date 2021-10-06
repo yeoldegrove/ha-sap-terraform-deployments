@@ -3,7 +3,6 @@ locals {
   private_ip_address = cidrhost(var.snet_address_range, 5)
 }
 
-
 resource "azurerm_subnet" "bastion" {
   count                = local.bastion_count == 1 && var.network_topology == "plain" ? 1 : 0
   name                 = "snet-bastion"
