@@ -277,6 +277,7 @@ resource "azurerm_virtual_machine" "hana" {
   tags = {
     workspace = var.common_variables["deployment_name"]
     role      = "hana_node"
+    role      = hana_node
   }
 }
 
