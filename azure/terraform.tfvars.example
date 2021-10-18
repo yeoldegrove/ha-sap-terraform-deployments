@@ -18,6 +18,9 @@ az_region = "westeurope"
 # The name must be unique among different deployments
 # deployment_name = "mydeployment"
 
+# Add the "deployment_name" as a prefix to the hostname.
+#deployment_name_in_hostname = false
+
 # Admin user for the created machines
 admin_user = "cloudadmin"
 
@@ -81,6 +84,9 @@ cluster_ssh_key = "salt://sshkeys/cluster.id_rsa"
 
 # Use an already existing subnet in this virtual network (optional, will be created otherwise)
 #subnet_name = "snet-spoke-sap-1-workload-myname"
+
+# Use an already existing subnet for Netapp in this virtual network (optional, will be created otherwise)
+# subnet_netapp_name = "snet-spoke-sap-1-netapp-myname"
 
 # vnet address range in CIDR notation
 # Only used if the vnet is created by terraform or the user doesn't have read permissions in this
@@ -160,6 +166,7 @@ resource_group_hub_create = false
 #vnet_address_range = "10.74.0.0/16"            # optional
 #subnet_mgmt_address_range = "10.74.0.64/27"    # optional
 #subnet_workload_address_range = "10.74.1.0/24" # optional
+#subnet_netapp_address_range = "10.74.3.0/24" # optional
 
 ##########################
 # Other deployment options
@@ -190,16 +197,15 @@ resource_group_hub_create = false
 # Run provisioner execution in background
 #background = true
 
-# QA variables
+# Test and QA purpose
 
 # Define if the deployment is used for testing purpose
 # Disable all extra packages that do not come from the image
 # Except salt-minion (for the moment) and salt formulas
 # true or false (default)
-#qa_mode = false
+#offline_mode = false
 
 # Execute HANA Hardware Configuration Check Tool to bench filesystems
-# qa_mode must be set to true for executing hwcct
 # true or false (default)
 #hwcct = false
 
@@ -231,6 +237,9 @@ resource_group_hub_create = false
 # This example shows the demo option values.Find more options in the README file
 #########################
 
+# Hostname, without the domain part
+#hana_name = "vmhana"
+
 # HANA configuration ()
 # VM size to use for the cluster nodes
 #hana_vm_size = "Standard_E4s_v3"
@@ -243,6 +252,26 @@ resource_group_hub_create = false
 
 # Network options
 #hana_enable_accelerated_networking = false
+
+#########################
+# shared storage variables
+# Needed if HANA is deployed in scale-out scenario
+# see https://docs.microsoft.com/en-us/azure/virtual-machines/workloads/sap/hana-vm-operations-netapp
+# for reference and minimum requirements
+#########################
+#hana_scale_out_shared_storage_type = ""      # only anf supported at the moment (default: "")
+#anf_pool_size                      = "15"    # min 30TB on Premium, min 15TB on Ultra
+#anf_pool_service_level             = "Ultra" # Standard (does not meet KPI), Premium, Ultra
+# min requirements Premium
+#hana_scale_out_anf_quota_data      = "4000"  # deployed 2x (for each site)
+#hana_scale_out_anf_quota_log       = "4000"  # deployed 2x (for each site)  
+#hana_scale_out_anf_quota_backup    = "2000"  # deployed 2x (for each site)
+#hana_scale_out_anf_quota_shared    = "4000"  # deployed 2x (for each site)
+# min requirements Ultra
+#hana_scale_out_anf_quota_data      = "2000"  # deployed 2x (for each site)
+#hana_scale_out_anf_quota_log       = "2000"  # deployed 2x (for each site)
+#hana_scale_out_anf_quota_backup    = "1000"  # deployed 2x (for each site)
+#hana_scale_out_anf_quota_shared    = "2000"  # deployed 2x (for each site)
 
 # Disk configuration
 #hana_data_disks_configuration = {
@@ -361,6 +390,9 @@ hana_inst_master = "//YOUR_STORAGE_ACCOUNT_NAME.file.core.windows.net/sapdata/sa
 # In order to enable SBD, an ISCSI server is needed as right now is the only option
 # All the clusters will use the same mechanism
 
+# Hostname, without the domain part
+#iscsi_name = "vmiscsi"
+
 # Custom iscsi server image
 #iscsi_srv_uri = "/path/to/your/iscsi/image"
 
@@ -387,6 +419,9 @@ hana_inst_master = "//YOUR_STORAGE_ACCOUNT_NAME.file.core.windows.net/sapdata/sa
 # Enable the host to be monitored by exporters
 #monitoring_enabled = true
 
+# Hostname, without the domain part
+#monitoring_name = "vmmonitoring"
+
 # IP address of the machine where Prometheus and Grafana are running. If it's not set the address will be auto generated from the provided vnet address range
 #monitoring_srv_ip = "10.74.1.13"
 
@@ -394,14 +429,17 @@ hana_inst_master = "//YOUR_STORAGE_ACCOUNT_NAME.file.core.windows.net/sapdata/sa
 # DRBD related variables
 ########################
 
+# Enable drbd cluster
+#drbd_enabled = true
+
+# Hostname, without the domain part
+#drbd_name = "vmdrbd"
+
 # Custom drbd nodes image
 #drbd_image_uri = "/path/to/your/monitoring/image"
 
 # Public image usage for the DRBD machines. BYOS example
 #drbd_os_image = "SUSE:sles-sap-15-sp2-byos:gen2:latest"
-
-# Enable drbd cluster
-#drbd_enabled = true
 
 # Each drbd cluster host IP address (sequential order). If it's not set the addresses will be auto generated from the provided vnet address range
 #drbd_ips = ["10.74.1.21", "10.74.1.22"]
@@ -420,6 +458,9 @@ hana_inst_master = "//YOUR_STORAGE_ACCOUNT_NAME.file.core.windows.net/sapdata/sa
 #############################
 
 #netweaver_enabled = true
+
+# Hostname, without the domain part
+#netweaver_name = "vmnetweaver"
 
 # Netweaver APP server count (PAS and AAS)
 # Set to 0 to install the PAS instance in the same instance as the ASCS. This means only 1 machine is installed in the deployment (2 if HA capabilities are enabled)
@@ -476,6 +517,20 @@ hana_inst_master = "//YOUR_STORAGE_ACCOUNT_NAME.file.core.windows.net/sapdata/sa
 
 # Example:
 #netweaver_product_id = "NW750.HDB.ABAPHA"
+
+#########################
+# Netweaver shared storage variables
+# Needed if Netweaver is deployed HA
+# see https://docs.microsoft.com/en-us/azure/virtual-machines/workloads/sap/hana-vm-operations-netapp
+# for reference and minimum requirements
+#########################
+#netweaver_shared_storage_type      = "drbd"  # drbd,anf supported at the moment (default: "drbd")
+#anf_pool_size                      = "15"    # min 30TB on Premium, min 15TB on Ultra -> only set once for Netweaver+HANA
+#anf_pool_service_level             = "Ultra" # Standard (does not meet KPI), Premium, Ultra -> only set once for Netweaver+HANA
+# min requirements Premium
+#netweaver_anf_quota_sapmnt         = "2000"  # deployed 1x
+# min requirements Ultra
+#netweaver_anf_quota_sapmnt         = "1000"  # deployed 1x
 
 # NFS share to store the Netweaver shared files. Only used if drbd_enabled is not set. For single machine deployments (ASCS and PAS in the same machine) set an empty string
 #netweaver_nfs_share = "url-to-your-netweaver-sapmnt-nfs-share"

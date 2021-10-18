@@ -6,6 +6,7 @@ locals {
   bastion_enabled        = var.common_variables["bastion_enabled"]
   create_ha_infra        = var.xscs_server_count > 0 && var.common_variables["netweaver"]["ha_enabled"] ? 1 : 0
   app_start_index        = local.create_ha_infra == 1 ? 2 : 1
+  shared_storage_anf     = var.common_variables["netweaver"]["shared_storage_type"] == "anf" ? 1 : 0
   additional_lun_number  = "0"
   provisioning_addresses = local.bastion_enabled ? data.azurerm_network_interface.netweaver.*.private_ip_address : data.azurerm_public_ip.netweaver.*.ip_address
   ascs_lb_rules_ports = local.create_ha_infra == 1 ? toset([
@@ -26,6 +27,7 @@ locals {
     "5${var.ers_instance_number}16",
     "9680" # monitoring - sap_host_exporter
   ]) : toset([])
+  hostname = var.common_variables["deployment_name_in_hostname"] ? format("%s-%s", var.common_variables["deployment_name"], var.name) : var.name
 }
 
 resource "azurerm_availability_set" "netweaver-xscs-availability-set" {
@@ -278,6 +280,42 @@ resource "azurerm_image" "netweaver-image" {
   }
 }
 
+# ANF volumes
+resource "azurerm_netapp_volume" "netweaver-netapp-volume-sapmnt" {
+  count = local.shared_storage_anf
+
+  lifecycle {
+    prevent_destroy = false
+  }
+
+  name                = "netweaver-netapp-volume-sapmnt"
+  location            = var.az_region
+  resource_group_name = var.resource_group_name
+  account_name        = var.anf_account_name
+  pool_name           = var.anf_pool_name
+  volume_path         = "netweaver-sapmnt"
+  service_level       = var.anf_pool_service_level
+  subnet_id           = var.network_subnet_netapp_id
+  protocols           = ["NFSv4.1"]
+  storage_quota_in_gb = var.netweaver_anf_quota_sapmnt
+
+  export_policy_rule {
+    rule_index        = 1
+    protocols_enabled = ["NFSv4.1"]
+    allowed_clients   = ["0.0.0.0/0"]
+    unix_read_write   = true
+  }
+
+  # Following section is only required if deploying a data protection volume (secondary)
+  # to enable Cross-Region Replication feature
+  # data_protection_replication {
+  #   endpoint_type             = "dst"
+  #   remote_volume_location    = azurerm_resource_group.example_primary.location
+  #   remote_volume_resource_id = azurerm_netapp_volume.example_primary.id
+  #   replication_frequency     = "10minutes"
+  # }
+}
+
 # APP server disk
 
 resource "azurerm_managed_disk" "app_server_disk" {
@@ -307,7 +345,7 @@ module "os_image_reference" {
 
 resource "azurerm_virtual_machine" "netweaver" {
   count                            = local.vm_count
-  name                             = "vmnetweaver${format("%02d", count.index + 1)}"
+  name                             = "${var.name}${format("%02d", count.index + 1)}"
   location                         = var.az_region
   resource_group_name              = var.resource_group_name
   network_interface_ids            = [element(azurerm_network_interface.netweaver.*.id, count.index)]
@@ -332,7 +370,7 @@ resource "azurerm_virtual_machine" "netweaver" {
   }
 
   os_profile {
-    computer_name  = "vmnetweaver${format("%02d", count.index + 1)}"
+    computer_name  = "${local.hostname}${format("%02d", count.index + 1)}"
     admin_username = var.common_variables["authorized_user"]
   }
 

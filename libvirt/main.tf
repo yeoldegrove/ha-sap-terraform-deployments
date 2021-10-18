@@ -52,6 +52,7 @@ module "common_variables" {
   source                              = "../generic_modules/common_variables"
   provider_type                       = "libvirt"
   deployment_name                     = local.deployment_name
+  deployment_name_in_hostname         = var.deployment_name_in_hostname
   reg_code                            = var.reg_code
   reg_email                           = var.reg_email
   reg_additional_modules              = var.reg_additional_modules
@@ -65,7 +66,7 @@ module "common_variables" {
   background                          = var.background
   monitoring_enabled                  = var.monitoring_enabled
   monitoring_srv_ip                   = var.monitoring_enabled ? local.monitoring_srv_ip : ""
-  qa_mode                             = var.qa_mode
+  offline_mode                        = var.offline_mode
   hana_hwcct                          = var.hwcct
   hana_sid                            = var.hana_sid
   hana_instance_number                = var.hana_instance_number
@@ -93,6 +94,8 @@ module "common_variables" {
   hana_ignore_min_mem_check           = var.hana_ignore_min_mem_check
   hana_cluster_fencing_mechanism      = var.hana_cluster_fencing_mechanism
   hana_sbd_storage_type               = var.sbd_storage_type
+  hana_scale_out_enabled              = var.hana_scale_out_enabled
+  hana_scale_out_shared_storage_type  = var.hana_scale_out_shared_storage_type
   netweaver_sid                       = var.netweaver_sid
   netweaver_ascs_instance_number      = var.netweaver_ascs_instance_number
   netweaver_ers_instance_number       = var.netweaver_ers_instance_number
@@ -115,6 +118,7 @@ module "common_variables" {
   netweaver_ha_enabled                = var.netweaver_ha_enabled
   netweaver_cluster_fencing_mechanism = var.netweaver_cluster_fencing_mechanism
   netweaver_sbd_storage_type          = var.sbd_storage_type
+  netweaver_shared_storage_type       = var.netweaver_shared_storage_type
   monitoring_hana_targets             = local.hana_ips
   monitoring_hana_targets_ha          = var.hana_ha_enabled ? local.hana_ips : []
   monitoring_hana_targets_vip         = var.hana_ha_enabled ? [local.hana_cluster_vip] : [local.hana_ips[0]] # we use the vip for HA scenario and 1st hana machine for non HA to target the active hana instance
@@ -129,6 +133,8 @@ module "common_variables" {
 module "iscsi_server" {
   source                = "./modules/iscsi_server"
   common_variables      = module.common_variables.configuration
+  name                  = var.iscsi_name
+  network_domain        = var.iscsi_network_domain == "" ? var.network_domain : var.iscsi_network_domain
   iscsi_count           = local.iscsi_enabled == true ? 1 : 0
   source_image          = var.iscsi_source_image
   volume_name           = var.iscsi_source_image != "" ? "" : (var.iscsi_volume_name != "" ? var.iscsi_volume_name : local.generic_volume_name)
@@ -146,7 +152,8 @@ module "iscsi_server" {
 module "hana_node" {
   source                = "./modules/hana_node"
   common_variables      = module.common_variables.configuration
-  name                  = "hana"
+  name                  = var.hana_name
+  network_domain        = var.hana_network_domain == "" ? var.network_domain : var.hana_network_domain
   source_image          = var.hana_source_image
   volume_name           = var.hana_source_image != "" ? "" : (var.hana_volume_name != "" ? var.hana_volume_name : local.generic_volume_name)
   hana_count            = var.hana_count
@@ -165,7 +172,8 @@ module "hana_node" {
 module "drbd_node" {
   source                = "./modules/drbd_node"
   common_variables      = module.common_variables.configuration
-  name                  = "drbd"
+  name                  = var.drbd_name
+  network_domain        = var.drbd_network_domain == "" ? var.network_domain : var.drbd_network_domain
   source_image          = var.drbd_source_image
   volume_name           = var.drbd_source_image != "" ? "" : (var.drbd_volume_name != "" ? var.drbd_volume_name : local.generic_volume_name)
   drbd_count            = var.drbd_enabled == true ? 2 : 0
@@ -189,7 +197,8 @@ module "drbd_node" {
 module "monitoring" {
   source                = "./modules/monitoring"
   common_variables      = module.common_variables.configuration
-  name                  = "monitoring"
+  name                  = var.monitoring_name
+  network_domain        = var.monitoring_network_domain == "" ? var.network_domain : var.monitoring_network_domain
   monitoring_enabled    = var.monitoring_enabled
   source_image          = var.monitoring_source_image
   volume_name           = var.monitoring_source_image != "" ? "" : (var.monitoring_volume_name != "" ? var.monitoring_volume_name : local.generic_volume_name)
@@ -205,9 +214,10 @@ module "monitoring" {
 module "netweaver_node" {
   source                = "./modules/netweaver_node"
   common_variables      = module.common_variables.configuration
+  name                  = var.netweaver_name
+  network_domain        = var.netweaver_network_domain == "" ? var.network_domain : var.netweaver_network_domain
   xscs_server_count     = local.netweaver_xscs_server_count
   app_server_count      = var.netweaver_enabled ? var.netweaver_app_server_count : 0
-  name                  = "netweaver"
   source_image          = var.netweaver_source_image
   volume_name           = var.netweaver_source_image != "" ? "" : (var.netweaver_volume_name != "" ? var.netweaver_volume_name : local.generic_volume_name)
   vcpu                  = var.netweaver_node_vcpu

@@ -78,6 +78,12 @@ variable "subnet_mgmt_name" {
   default     = ""
 }
 
+variable "subnet_netapp_name" {
+  description = "Already existing subnet name used by the created infrastructure. If it's not set a new one will be created named snet-{{var.deployment_name/terraform.workspace}}"
+  type        = string
+  default     = ""
+}
+
 variable "subnet_mgmt_address_range" {
   description = "subnet address range in CIDR notation (only used if the subnet is created by terraform or the user doesn't have read permissions in this resource. To use the current vnet address range set the value to an empty string)"
   type        = string
@@ -85,6 +91,18 @@ variable "subnet_mgmt_address_range" {
   validation {
     condition = (
       var.subnet_mgmt_address_range == "" || can(regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.subnet_mgmt_address_range))
+    )
+    error_message = "Invalid IP range format. It must be something like: 102.168.10.5/24 ."
+  }
+}
+
+variable "subnet_netapp_address_range" {
+  description = "subnet address range in CIDR notation (only used if the subnet is created by terraform or the user doesn't have read permissions in this resource. To use the current vnet address range set the value to an empty string)"
+  type        = string
+  default     = ""
+  validation {
+    condition = (
+      var.subnet_netapp_address_range == "" || can(regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.subnet_netapp_address_range))
     )
     error_message = "Invalid IP range format. It must be something like: 102.168.10.5/24 ."
   }
@@ -175,6 +193,18 @@ variable "authorized_keys" {
   default     = []
 }
 
+variable "bastion_name" {
+  description = "hostname, without the domain part"
+  type        = string
+  default     = "vmbastion"
+}
+
+variable "bastion_network_domain" {
+  description = "hostname's network domain"
+  type        = string
+  default     = ""
+}
+
 variable "bastion_enabled" {
   description = "Create a VM to work as a bastion to avoid the usage of public ip addresses and manage the ssh connection to the other machines"
   type        = bool
@@ -211,6 +241,18 @@ variable "deployment_name" {
   description = "Suffix string added to some of the infrastructure resources names. If it is not provided, the terraform workspace string is used as suffix"
   type        = string
   default     = ""
+}
+
+variable "deployment_name_in_hostname" {
+  description = "Add deployment_name as a prefix to all hostnames."
+  type        = bool
+  default     = false
+}
+
+variable "network_domain" {
+  description = "hostname's network domain for all hosts. Can be overwritten by modules."
+  type        = string
+  default     = "tf.local"
 }
 
 variable "os_image" {
@@ -300,10 +342,16 @@ variable "provisioning_output_colored" {
 
 # Hana related variables
 
-variable "name" {
+variable "hana_name" {
   description = "hostname, without the domain part"
   type        = string
-  default     = "hana"
+  default     = "vmhana"
+}
+
+variable "hana_network_domain" {
+  description = "hostname's network domain"
+  type        = string
+  default     = ""
 }
 
 variable "hana_count" {
@@ -560,6 +608,18 @@ variable "sbd_storage_type" {
 # If iscsi is selected as sbd_storage_type
 # Use the next variables for advanced configuration
 
+variable "iscsi_name" {
+  description = "hostname, without the domain part"
+  type        = string
+  default     = "vmiscsi"
+}
+
+variable "iscsi_network_domain" {
+  description = "hostname's network domain"
+  type        = string
+  default     = ""
+}
+
 variable "iscsi_os_image" {
   description = "sles4sap image used to create the ISCSI machines. Composed by 'Publisher:Offer:Sku:Version' syntax. Example: SUSE:sles-sap-15-sp2:gen2:latest"
   type        = string
@@ -603,6 +663,18 @@ variable "iscsi_disk_size" {
 
 # Monitoring related variables
 
+variable "monitoring_name" {
+  description = "hostname, without the domain part"
+  type        = string
+  default     = "vmmonitoring"
+}
+
+variable "monitoring_network_domain" {
+  description = "hostname's network domain"
+  type        = string
+  default     = ""
+}
+
 variable "monitoring_enabled" {
   description = "Enable the host to be monitored by exporters, e.g node_exporter"
   type        = bool
@@ -640,6 +712,18 @@ variable "monitoring_srv_ip" {
 }
 
 # DRBD related variables
+
+variable "drbd_name" {
+  description = "hostname, without the domain part"
+  type        = string
+  default     = "vmdrbd"
+}
+
+variable "drbd_network_domain" {
+  description = "hostname's network domain"
+  type        = string
+  default     = ""
+}
 
 variable "drbd_enabled" {
   description = "Enable the DRBD cluster for nfs"
@@ -702,6 +786,18 @@ variable "drbd_nfs_mounting_point" {
 }
 
 # Netweaver related variables
+
+variable "netweaver_name" {
+  description = "hostname, without the domain part"
+  type        = string
+  default     = "vmnetweaver"
+}
+
+variable "netweaver_network_domain" {
+  description = "hostname's network domain"
+  type        = string
+  default     = ""
+}
 
 variable "netweaver_enabled" {
   description = "Enable SAP Netweaver cluster deployment"
@@ -919,14 +1015,18 @@ variable "netweaver_ha_enabled" {
   default     = true
 }
 
-# Specific QA variables
+# Testing and QA
 
-variable "qa_mode" {
-  description = "Enable test/qa mode (disable extra packages usage not coming in the image)"
+# Disable extra package installation (sap, ha pattern etc).
+# Disables first registration to install salt-minion, it is considered that images are delivered with salt-minion
+variable "offline_mode" {
+  description = "Disable installation of extra packages usage not coming with the image"
   type        = bool
   default     = false
 }
 
+# Execute HANA Hardware Configuration Check Tool to bench filesystems.
+# The test takes several hours. See results in /root/hwcct_out and in global log file /var/log/salt-result.log.
 variable "hwcct" {
   description = "Execute HANA Hardware Configuration Check Tool to bench filesystems"
   type        = bool
@@ -978,8 +1078,98 @@ variable "vnet_hub_name" {
   default     = ""
 }
 
+variable "hana_scale_out_enabled" {
+  description = "Enable HANA scale out deployment"
+  type        = bool
+  default     = false
+}
+
+variable "hana_scale_out_shared_storage_type" {
+  description = "Storage type to use for HANA scale out deployment"
+  type        = string
+  default     = ""
+  validation {
+    condition = (
+      can(regex("^(|anf)$", var.hana_scale_out_shared_storage_type))
+    )
+    error_message = "Invalid HANA scale out storage type. Options: anf."
+  }
+}
+
+variable "anf_account_name" {
+  description = "Name of ANF Accounts"
+  type        = string
+  default     = ""
+}
+
+variable "anf_pool_name" {
+  description = "Name if ANF Pool"
+  type        = string
+  default     = ""
+}
+
 variable "spoke_name" {
   description = "Name of Spoke Network to create (will be used in vnet and other resources)."
   type        = string
   default     = ""
+}
+
+variable "anf_pool_size" {
+  description = "pool size for ANF shared Storage. Must be >=4 TB"
+  type        = number
+  default     = "4"
+}
+
+variable "anf_pool_service_level" {
+  description = "service level for ANF shared Storage"
+  type        = string
+  default     = "Ultra"
+  validation {
+    condition = (
+      can(regex("^(Standard|Premium|Ultra)$", var.anf_pool_service_level))
+    )
+    error_message = "Invalid ANF Pool service level. Options: Standard|Premium|Ultra."
+  }
+}
+
+variable "netweaver_shared_storage_type" {
+  description = "shared Storage type to use for Netweaver deployment"
+  type        = string
+  default     = "drbd"
+  validation {
+    condition = (
+      can(regex("^(|drbd|anf)$", var.netweaver_shared_storage_type))
+    )
+    error_message = "Invalid Netweaver shared storage type. Options: drbd|anf."
+  }
+}
+
+variable "netweaver_anf_quota_sapmnt" {
+  description = "Quota for ANF shared storage volume Netweaver"
+  type        = number
+  default     = "1000"
+}
+
+variable "hana_scale_out_anf_quota_data" {
+  description = "Quota for ANF shared storage volume HANA scale-out data"
+  type        = number
+  default     = "2000"
+}
+
+variable "hana_scale_out_anf_quota_log" {
+  description = "Quota for ANF shared storage volume HANA scale-out log"
+  type        = number
+  default     = "2000"
+}
+
+variable "hana_scale_out_anf_quota_backup" {
+  description = "Quota for ANF shared storage volume HANA scale-out backup"
+  type        = number
+  default     = "1000"
+}
+
+variable "hana_scale_out_anf_quota_shared" {
+  description = "Quota for ANF shared storage volume HANA scale-out shared"
+  type        = number
+  default     = "2000"
 }

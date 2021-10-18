@@ -74,6 +74,7 @@ module "common_variables" {
   source                              = "../generic_modules/common_variables"
   provider_type                       = "openstack"
   deployment_name                     = local.deployment_name
+  deployment_name_in_hostname         = var.deployment_name_in_hostname
   reg_code                            = var.reg_code
   reg_email                           = var.reg_email
   reg_additional_modules              = var.reg_additional_modules
@@ -92,7 +93,7 @@ module "common_variables" {
   background                          = var.background
   monitoring_enabled                  = var.monitoring_enabled
   monitoring_srv_ip                   = var.monitoring_enabled ? local.monitoring_srv_ip : ""
-  qa_mode                             = var.qa_mode
+  offline_mode                        = var.offline_mode
   hana_hwcct                          = var.hwcct
   hana_sid                            = var.hana_sid
   hana_instance_number                = var.hana_instance_number
@@ -120,6 +121,8 @@ module "common_variables" {
   hana_ignore_min_mem_check           = var.hana_ignore_min_mem_check
   hana_cluster_fencing_mechanism      = var.hana_cluster_fencing_mechanism
   hana_sbd_storage_type               = var.sbd_storage_type
+  hana_scale_out_enabled              = var.hana_scale_out_enabled
+  hana_scale_out_shared_storage_type  = var.hana_scale_out_shared_storage_type
   netweaver_sid                       = var.netweaver_sid
   netweaver_ascs_instance_number      = var.netweaver_ascs_instance_number
   netweaver_ers_instance_number       = var.netweaver_ers_instance_number
@@ -142,6 +145,7 @@ module "common_variables" {
   netweaver_ha_enabled                = var.netweaver_ha_enabled
   netweaver_cluster_fencing_mechanism = var.netweaver_cluster_fencing_mechanism
   netweaver_sbd_storage_type          = var.sbd_storage_type
+  netweaver_shared_storage_type       = var.netweaver_shared_storage_type
   monitoring_hana_targets             = local.hana_ips
   monitoring_hana_targets_ha          = var.hana_ha_enabled ? local.hana_ips : []
   monitoring_hana_targets_vip         = var.hana_ha_enabled ? [local.hana_cluster_vip] : [local.hana_ips[0]] # we use the vip for HA scenario and 1st hana machine for non HA to target the active hana instance
@@ -156,6 +160,8 @@ module "common_variables" {
 module "drbd_node" {
   source              = "./modules/drbd_node"
   common_variables    = module.common_variables.configuration
+  name                = var.drbd_name
+  network_domain      = var.drbd_network_domain == "" ? var.network_domain : var.drbd_network_domain
   region              = var.region
   region_net          = var.region_net
   bastion_host        = module.bastion.public_ip
@@ -187,6 +193,8 @@ module "drbd_node" {
 module "netweaver_node" {
   source                    = "./modules/netweaver_node"
   common_variables          = module.common_variables.configuration
+  name                      = var.netweaver_name
+  network_domain            = var.netweaver_network_domain == "" ? var.network_domain : var.netweaver_network_domain
   region                    = var.region
   region_net                = var.region_net
   bastion_host              = module.bastion.public_ip
@@ -200,7 +208,6 @@ module "netweaver_node" {
   network_subnet_id         = local.subnet_id
   firewall_internal         = openstack_networking_secgroup_v2.ha_firewall_internal.id
   os_image                  = local.netweaver_os_image
-  network_domain            = "tf.local"
   iscsi_srv_ip              = module.iscsi_server.iscsisrv_ip
   fencing_mechanism         = var.hana_cluster_fencing_mechanism
   sbd_storage_type          = var.sbd_storage_type
@@ -218,6 +225,8 @@ module "netweaver_node" {
 module "hana_node" {
   source                     = "./modules/hana_node"
   common_variables           = module.common_variables.configuration
+  name                       = var.hana_name
+  network_domain             = var.hana_network_domain == "" ? var.network_domain : var.hana_network_domain
   region                     = var.region
   region_net                 = var.region_net
   bastion_host               = module.bastion.public_ip
@@ -250,6 +259,8 @@ module "hana_node" {
 module "monitoring" {
   source              = "./modules/monitoring"
   common_variables    = module.common_variables.configuration
+  name                = var.monitoring_name
+  network_domain      = var.monitoring_network_domain == "" ? var.network_domain : var.monitoring_network_domain
   region              = var.region
   region_net          = var.region_net
   bastion_host        = module.bastion.public_ip
@@ -271,6 +282,8 @@ module "monitoring" {
 module "iscsi_server" {
   source              = "./modules/iscsi_server"
   common_variables    = module.common_variables.configuration
+  name                = var.iscsi_name
+  network_domain      = var.iscsi_network_domain == "" ? var.network_domain : var.iscsi_network_domain
   region              = var.region
   region_net          = var.region_net
   bastion_host        = module.bastion.public_ip

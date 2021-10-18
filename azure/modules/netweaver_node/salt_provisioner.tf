@@ -21,8 +21,8 @@ resource "null_resource" "netweaver_provisioner" {
 role: netweaver_node
 ${var.common_variables["grains_output"]}
 ${var.common_variables["netweaver_grains_output"]}
-name_prefix: vmnetweaver
-hostname: vmnetweaver${format("%02d", count.index + 1)}
+name_prefix: ${local.hostname}
+hostname: ${local.hostname}${format("%02d", count.index + 1)}
 network_domain: ${var.network_domain}
 host_ips: [${join(", ", formatlist("'%s'", var.host_ips))}]
 virtual_host_ips: [${join(", ", formatlist("'%s'", var.virtual_host_ips))}]
@@ -41,6 +41,8 @@ tenant_id: ${var.tenant_id}
 resource_group_name: ${var.resource_group_name}
 fence_agent_app_id: ${var.fence_agent_app_id}
 fence_agent_client_secret: ${var.fence_agent_client_secret}
+anf_mount_ip:
+  sapmnt: [ ${local.shared_storage_anf == 1 ? join(", ", azurerm_netapp_volume.netweaver-netapp-volume-sapmnt.*.mount_ip_addresses.0) : ""} ]
   EOF
     destination = "/tmp/grains"
   }
