@@ -17,15 +17,43 @@ data "azurerm_subnet" "snet-workload" {
 locals {
   # If vnet_name is not defined, a new vnet is created
   # If vnet_name is defined, and the vnet_address_range is empty, it will try to get the ip range from the real vnet using the data source. If vnet_address_range is defined it will use it
-  vnet_create          = var.vnet_name == "" ? true : false
-  vnet_name            = local.vnet_create ? azurerm_virtual_network.vnet.0.name : var.vnet_name
-  vnet_address_range   = local.vnet_create ? azurerm_virtual_network.vnet.0.address_space.0 : data.azurerm_virtual_network.vnet.0.address_space.0
-  subnet_create        = var.subnet_name == "" ? true : false
-  subnet_id            = local.subnet_create ? azurerm_subnet.snet-workload.0.id : format("/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/virtualNetworks/%s/subnets/%s", data.azurerm_subscription.current.subscription_id, var.resource_group_name, var.vnet_name, var.subnet_name)
-  subnet_address_range = var.subnet_address_range == "" ? cidrsubnet(var.vnet_address_range, 8, 1) : var.subnet_address_range
+  vnet_create                 = var.vnet_name == "" ? true : false
+  vnet_name                   = local.vnet_create ? azurerm_virtual_network.vnet.0.name : var.vnet_name
+  vnet_address_range          = local.vnet_create ? azurerm_virtual_network.vnet.0.address_space.0 : data.azurerm_virtual_network.vnet.0.address_space.0
+  subnet_create               = var.subnet_name == "" ? true : false
+  subnet_id                   = local.subnet_create ? azurerm_subnet.snet-workload.0.id : format("/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/virtualNetworks/%s/subnets/%s", data.azurerm_subscription.current.subscription_id, var.resource_group_name, var.vnet_name, var.subnet_name)
+  subnet_address_range        = var.subnet_address_range == "" ? cidrsubnet(var.vnet_address_range, 8, 1) : var.subnet_address_range
+  subnet_netapp_name          = var.shared_storage_anf ? azurerm_subnet.snet-netapp.0.name : var.subnet_netapp_name
+  subnet_netapp_id            = var.shared_storage_anf ? azurerm_subnet.snet-netapp.0.id : format("/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/virtualNetworks/%s/subnets/%s", data.azurerm_subscription.current.subscription_id, var.resource_group_name, var.vnet_name, var.subnet_netapp_name)
+  subnet_netapp_address_range = var.subnet_netapp_address_range == "" ? cidrsubnet(var.vnet_address_range, 8, 3) : var.subnet_netapp_address_range
 }
 
 # Network resources: Virtual Network, Subnet
+
+# Azure Netapp Files resources (see README for ANF setup)
+data "azurerm_subnet" "snet-netapp" {
+  count                = var.anf_pool_name != "" && var.subnet_netapp_address_range == "" ? 1 : 0
+  name                 = var.subnet_netapp_name
+  virtual_network_name = local.vnet_name
+  resource_group_name  = var.resource_group_name
+}
+
+resource "azurerm_subnet" "snet-netapp" {
+  count                = var.subnet_netapp_name == "" && var.anf_pool_name != "" ? 1 : 0
+  name                 = "snet-netapp-${var.deployment_name}"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = local.vnet_name
+  address_prefixes     = [local.subnet_netapp_address_range]
+
+  delegation {
+    name = "netapp"
+
+    service_delegation {
+      name    = "Microsoft.Netapp/volumes"
+      actions = ["Microsoft.Network/networkinterfaces/*", "Microsoft.Network/virtualNetworks/subnets/join/action"]
+    }
+  }
+}
 
 # Plain Network (in case network_topology=plain)
 
