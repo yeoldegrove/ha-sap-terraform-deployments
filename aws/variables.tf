@@ -208,7 +208,7 @@ variable "hana_os_owner" {
 variable "hana_instancetype" {
   description = "The instance type of the hana nodes"
   type        = string
-  default     = "r6i.large"
+  default     = "r6i.xlarge"
 }
 
 variable "hana_subnet_address_range" {

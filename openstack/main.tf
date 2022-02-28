@@ -242,8 +242,6 @@ module "hana_node" {
   firewall_internal          = openstack_networking_secgroup_v2.ha_firewall_internal.id
   os_image                   = local.hana_os_image
   host_ips                   = local.hana_ips
-  fencing_mechanism          = var.hana_cluster_fencing_mechanism
-  sbd_storage_type           = var.sbd_storage_type
   hana_cluster_vip           = local.hana_cluster_vip
   hana_cluster_vip_secondary = local.hana_cluster_vip_secondary
   iscsi_srv_ip               = module.iscsi_server.iscsisrv_ip
