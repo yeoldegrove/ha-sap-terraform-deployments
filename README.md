@@ -137,6 +137,15 @@ in a flexible and customizable way.
 …
 ```
 
+Under the hood, [shaptools🔗](https://github.com/SUSE/shaptools) and [salt-shaptools🔗](https://github.com/SUSE/salt-shaptools) are used, to have a stable API to access
+SAP HANA and Netweaver functionalities.
+
+The whole architecture stack can be seen here:
+
+![Architecture](doc/project-architecture.png)
+
+
+
 ![SUSE/SAP HA automation project](doc/suse-sap-ha-automation-project.png)
 
 This repository is intended to be configured and run from a local
