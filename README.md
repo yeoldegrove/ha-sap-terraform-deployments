@@ -24,7 +24,7 @@ possible. The major big cloud providers _Google Cloud Platform_
 supported.  Furthermore _OpenStack_ and _libvirt/KVM_ can be used.
 
 
-# Components and Feature Overview
+# Components / Features / Products / Cloud Providers
 
 ![SAP architecture building blocks](doc/sap-architecture-building-blocks.png)
 
@@ -33,17 +33,22 @@ features can be enabled or disabled through configuration options to
 control the behavior of the HA Cluster, the SAP HANA and SAP S/4HANA
 or SAP NetWeaver.
 
-Some configurable major features are:
+## Components
 
  - _SAP HANA environment_: The SAP HANA deployment is configurable. It
    might be deployed as a single SAP HANA database, a dual
    configuration with system replication. In addition a HA cluster can
    be set in top of that. Also see [Preparing SAP software](doc/sap_software.md)
 
- - _ISCSI server_: provides a network based storage mostly used by
-   _sbd fencing_ mechanism.  Also see [Fencing mechanism](doc/fencing.md)
+ - _SAP NetWeaver_ environment: with ASCS, ERS, PAS and AAS instances
+   can be deployed using SAP HANA database as storage. For more
+   information see [S/4HANA and NetWeaver](doc/netweaver.md).
 
- - _Monitoring services server_: The monitoring solution is based in
+ - _ISCSI server_: provides Stonith Block Devices used by the
+   _sbd fencing_ mechanism. Also see [Fencing mechanism](doc/fencing.md)
+   _Native fencing_ mechanisms are available for some cloud environments.
+
+ - _Monitoring services server_: The monitoring solution is based on
    [prometheus🔗](https://prometheus.io) and
    [grafana🔗](https://grafana.com/) and provides informative and
    customizable dashboards to users and administrators. For
@@ -52,15 +57,35 @@ Some configurable major features are:
  - _DRBD cluster_: is used to provide a highly available NFS server.
    It will be used to mount SAP NetWeaver shared files. For more
    information see [DRBD](doc/drbd.md).
-
- - _SAP NetWeaver_ environment: with ASCS, ERS, PAS and AAS instances
-   can be deployed using SAP HANA database as storage. For more
-   information see [S/4HANA and NetWeaver](doc/netweaver.md).
+   Some clouds provide native solutions for high available NFS.
 
 For more on various topics have a look on the following documentation:
 
    - [SUSE saptune](doc/saptune.md)
    - [IP addresses auto generation](doc/ip_autogeneration.md)
+
+## Features
+
+## Products
+
+### SAP
+
+* SAP NETWEAVER 7.5 (and later)
+
+* SAP S/4HANA 1610, 1709, 1809, 1909, 2020, 2021
+
+### SUSE
+
+* SUSE Linux Enterprise Server for SAP Applications 12 SP5
+* SUSE Linux Enterprise Server for SAP Applications 15 SP3
+
+## Cloud Providers (terraform providers)
+
+* AWS
+* Azure
+* GCP
+* OpenStack
+* Libvirt 
 
 
 # Project Structure
@@ -68,19 +93,7 @@ For more on various topics have a look on the following documentation:
 This project heavily uses [terraform🔗](https://www.terraform.io/) and
 [salt🔗](https://www.saltstack.com/) for configuration and deployment.
 
-**Terraform** is used to create the required infrastructure in the
-specified provider. The code is divided in different terraform modules
-to make the code modular and more maintainable.
-
-**Salt** configures all the by terraform created machines based in the
-provided pillar files that give the option to customize the deployment.
-
-![SUSE/SAP HA automation project](doc/suse-sap-ha-automation-project.png)
-
-This repository is intended to be configured and run from a local
-computer. Terraform will then build up the infrastructure and
-machines. The SAP software media will be installed from a storage and
-configured after.
+**Terraform** is used to create the required infrastructure in the specified cloud.
 
 The code is divided into sub directores for each terraform provider and 
 split into different terraform modules. There are also some abstracted _generic_modules_
@@ -91,6 +104,8 @@ split into different terraform modules. There are also some abstracted _generic_
 │    └── modules
 ├── azure
 │    └── modules
+├── generic_modules
+│    └── ...
 ├── gcp
 │    └── modules
 ├── libvirt
@@ -100,8 +115,38 @@ split into different terraform modules. There are also some abstracted _generic_
 …
 ```
 
-Each provider folder has it own provider relevant documentation,
-modules and example configuration.
+This makes the code modular and more maintainable.
+
+**Salt** configures all virtual machine instances that are provisioned by terraform.
+This includes configuring the operating system, mounting filesystems,
+installing SAP software, installing HA components.
+It does so by using pillars/grains which are injected by terraform
+in a flexible and customizable way.
+
+```
+./ha-sap-terraform-deployments
+├── pillar_examples
+│    └── automatic
+│        └── drbd
+│        └── hana
+│        └── netweaver
+├── salt
+│    └── bastion
+│    └── cluster_node
+│    └── ...
+…
+```
+
+![SUSE/SAP HA automation project](doc/suse-sap-ha-automation-project.png)
+
+This repository is intended to be configured and run from a local
+computer. Terraform will then build up the infrastructure and
+machines. The SAP software media will be installed from a storage and
+configured after.
+
+
+**Each provider folder has it own provider relevant documentation,**
+**modules and example configuration.**
 
 
 # Getting started 
