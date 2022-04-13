@@ -17,9 +17,9 @@ ___
 # About
 
 This Project provides a high configurable way to deploy **SAP HANA**
-database and **SAP S/4HANA** or rather **SAP NetWeaver** on various
+database and **SAP S/4HANA** (or **SAP NetWeaver**) on various
 cloud platforms. Both public cloud and private cloud scenarios are
-considerable. The major big cloud providers _Google Cloud Platform_
+possible. The major big cloud providers _Google Cloud Platform_
 (GCP), _Microsoft Azure_, and _Amazon Web Services_ (AWS) are
 supported.  Furthermore _OpenStack_ and _libvirt/KVM_ can be used.
 
@@ -49,8 +49,8 @@ Some configurable major features are:
    customizable dashboards to users and administrators. For
    more information see [Monitoring of cluster](doc/monitoring.md).
 
- - _DRBD cluster_: is used to mount a HA NFS server on top of it. It
-   will be used to mount SAP NetWeaver shared files. For more
+ - _DRBD cluster_: is used to provide a highly available NFS server.
+   It will be used to mount SAP NetWeaver shared files. For more
    information see [DRBD](doc/drbd.md).
 
  - _SAP NetWeaver_ environment: with ASCS, ERS, PAS and AAS instances
@@ -82,8 +82,8 @@ computer. Terraform will then build up the infrastructure and
 machines. The SAP software media will be installed from a storage and
 configured after.
 
-This project is organized in subfolders per public or private cloud
-provider containing the terraform modules and salt configuration files
+The code is divided into sub directores for each terraform provider and 
+split into different terraform modules. There are also some abstracted _generic_modules_
 
 ```
 ./ha-sap-terraform-deployments
