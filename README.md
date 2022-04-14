@@ -79,9 +79,9 @@ This repository supports deployment with following products and SAP certified pr
 | SAP       | SAP S/4HANA 1610, 1709, 1809, 1909, 2020, 2021           |
 | SUSE      | SUSE Linux Enterprise Server for SAP Applications 12 SP5 |
 | SUSE      | SUSE Linux Enterprise Server for SAP Applications 15 SP3 |
-| Amazon    | Amazon Web Services (AWS)                                | [IaaS for AWS🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/iaas.html#categories=Amazon%20Web%20Services) |
-| Google    | Google Cloud Platform (GCP)                              | [IaaS for GCP🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/iaas.html#categories=Google%20Cloud%20Platform) |
-| Microsoft | Azure                                                    | [IaaS for Azure🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/iaas.html#categories=Microsoft%20Azure)⁺ |
+| Amazon    | Amazon Web Services (AWS)                                | [IaaS for AWS🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/#/solutions?filters=ve:23)
+| Google    | Google Cloud Platform (GCP)                              | [IaaS for GCP🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/#/solutions?filters=ve:29)
+| Microsoft | Azure⁺                                                   | [IaaS for Azure🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/#/solutions?filters=ve:24)
 |           | OpenStack                                                |
 |           | Libvirt                                                  |
 
