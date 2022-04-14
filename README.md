@@ -73,17 +73,17 @@ For more on various topics have a look on the following documentation:
 
 This repository supports deployment with following products and SAP certified providers:
 
-| Vendor    | Product                                                  | Certification                     |
-| --------- | -------------------------------------------------------- | --------------------------------- |
-| SAP       | SAP NETWEAVER 7.5 (and later)                            |
-| SAP       | SAP S/4HANA 1610, 1709, 1809, 1909, 2020, 2021           |
-| SUSE      | SUSE Linux Enterprise Server for SAP Applications 12 SP5 | [SLES for SAP🔗](https://www.suse.com/products/sles-for-sap/), <br> [SAP Process Automation🔗](https://store.sap.com/dcp/en/product/display-0000059520_live_v1/SUSE%20Linux%20Enterprise%20Server%20for%20SAP%20applications)  |
-| SUSE      | SUSE Linux Enterprise Server for SAP Applications 15 SP3 | see links above                   |
-| Amazon    | Amazon Web Services (AWS)                                | [IaaS for AWS🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/#/solutions?filters=ve:23)  |
-| Microsoft | Azure⁺                                                   | [IaaS for Azure🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/#/solutions?filters=ve:24)  |
-| Google    | Google Cloud Platform (GCP)                              | [IaaS for GCP🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/#/solutions?filters=ve:29)  |
-|           | OpenStack                                                |                                   |
-|           | Libvirt                                                  |                                   |
+| Vendor      | Product                                                  | Certification                     |
+| ----------- | -------------------------------------------------------- | --------------------------------- |
+| SAP         | SAP NETWEAVER 7.5 (and later)                            |
+| SAP         | SAP S/4HANA 1610, 1709, 1809, 1909, 2020, 2021           |
+| SUSE        | SUSE Linux Enterprise Server for SAP Applications 12 SP5 | [SLES for SAP🔗](https://www.suse.com/products/sles-for-sap/), <br> [SAP Process Automation🔗](https://store.sap.com/dcp/en/product/display-0000059520_live_v1/SUSE%20Linux%20Enterprise%20Server%20for%20SAP%20applications)  |
+| SUSE        | SUSE Linux Enterprise Server for SAP Applications 15 SP3 | see links above                   |
+| Amazon      | Amazon Web Services (AWS)                                | [IaaS for AWS🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/#/solutions?filters=ve:23)  |
+| Microsoft   | Azure⁺                                                   | [IaaS for Azure🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/#/solutions?filters=ve:24)  |
+| Google      | Google Cloud Platform (GCP)                              | [IaaS for GCP🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/#/solutions?filters=ve:29)  |
+| OpenInfra   | OpenStack                                                |                                   |
+| libvirt.org | Libvirt                                                  |                                   |
 
   ⁺ Be carreful with Azure, **clustering** means scale-out scenario
 
