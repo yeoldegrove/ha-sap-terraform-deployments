@@ -193,7 +193,7 @@ This repository is intended to be configured and run from a local workstation, b
 
 # Getting started 
 
-![SUSE/SAP HA automation project](doc/sap-workload-automation-suse-flow.svg)
+![SUSE/SAP HA automation project](doc/sap-workload-automation-suse-flow.png)
 
 The SAP software media has to be available and prepared according to [Preparing SAP software](doc/sap_software.md).
 
