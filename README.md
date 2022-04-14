@@ -145,9 +145,6 @@ The whole architecture stack can be seen here:
 ![Architecture](doc/project-architecture.png)
 
 
-
-![SUSE/SAP HA automation project](doc/suse-sap-ha-automation-project.png)
-
 This repository is intended to be configured and run from a local
 computer. Terraform will then build up the infrastructure and
 machines. The SAP software media will be installed from a storage and
@@ -159,6 +156,8 @@ configured after.
 
 
 # Getting started 
+
+![SUSE/SAP HA automation project](doc/suse-sap-ha-automation-project.png)
 
 First make sure to have terraform and salt installed. Clone this
 repository and follow the quickstart guides of the favored provider.
@@ -173,15 +172,8 @@ They can be found in `./<provider/README.md>` or linked below:
 Each provider folder contains a minimal working configuration example
 `terraform.tfvars.example`.
 
-
-## Templates
-
-For setting up the terraform variables in order to get started with the project.
-For fine tuning refer to variable specification, see [templates](doc/deployment-templates.md).
-
-**Please be careful which instance type you will use! Because default
-selection value chooses systems certified by SAP.  This could lead to
-expensive costs if you leave the value untouched.**
+**Please be careful which instance type you will use! The selection of
+systems certified by SAP could lead to expensive unexpected costs.**
 
 
 ## Links
