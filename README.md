@@ -111,19 +111,100 @@ This repository supports deployment on the following SAP certified providers clo
 
 The following features are implemented:
 
-| Feature                                                       | Explanation                                                                                                                | AWS                | Azure              | GCP                | OpenStack          |  Libvirt           | additional information            |
-| ---                                                           | ---                                                                                                                        | ---                | ---                | ---                | ---                | ---                | ---                               |
-| SUSE saptune / SAP sapnotes                                   | SUSE'S saptune is applied with the correct solution template to configure the sytems based on SAP sapnotes recommendations | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | [Tuning Systems with saptune🔗](https://documentation.suse.com/sles-sap/15-SP3/html/SLES-SAP-guide/cha-tune.html) | 
-| HANA single node                                              | Deployment of HANA on a single node                                                                                        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | [SAP Hardware Directory for AWS🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/#/solutions?filters=ve:23)  |
-| HANA Scale-Up - performance optimized                         | Deployment of HANA with system replication in a performance optimized setup                                                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | [SAP HANA System Replication Scale-Up - Performance Optimized Scenario🔗](https://documentation.suse.com/sbp/all/single-html/SLES4SAP-hana-sr-guide-PerfOpt-15/) |
-| HANA Scale-Up - cost optimized                                | Deployment of HANA with system replication in a cost optimized (additional tenant DB) setup                                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | [SAP HANA System Replication Scale-Up - Cost Optimized Scenario🔗](https://documentation.suse.com/sbp/all/html/SLES4SAP-hana-sr-guide-costopt-15/) |
-| HANA Scale-Out - performance optimized                        | Deployment of HANA Scale-Out (multi node) with system replication in a performance optimized setup                         | :white_check_mark: | :heavy_check_mark: | :white_check_mark: | :heavy_check_mark: | :white_check_mark: | [SAP HANA System Replication Scale-Out - Performance Optimized Scenario🔗](https://documentation.suse.com/sbp/all/html/SLES4SAP-hana-sr-guide-costopt-15/) <br> [SAP HANA System Replication Scale-Out High Availability in Amazon Web Services🔗](https://documentation.suse.com/sbp/all/html/SLES-SAP-hana-scaleOut-PerfOpt-12-AWS/) |
-| HANA Scale-Out - with standby nodes (HANA Host-Auto-Failover) | Deployment of HANA Scale-Out (multi node) with system replication and Host-Auto-Failover via standby nodes                 | :white_check_mark: | :heavy_check_mark: | :white_check_mark: | :heavy_check_mark: | :white_check_mark: | [Setting Up Host Auto-Failover🔗](https://help.sap.com/docs/SAP_HANA_PLATFORM/6b94445c94ae495c83a19646e7c3fd56/879d9dc46bb64ccda028872c86c70afc.html?version=2.0.05) <br> [Azure: Deploy a SAP HANA scale-out system with standby node on Azure VMs by using Azure NetApp Files on SUSE Linux Enterprise Server🔗](https://docs.microsoft.com/en-us/azure/virtual-machines/workloads/sap/sap-hana-scale-out-standby-netapp-files-suse) |
-| S/4 HANA ENSA 1                                               | Deployment of a S/4HANA in Enqueue Replication (ENSA) 1 scenario                                                           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | [SAP NetWeaver Enqueue Replication 1 High Availability Cluster - Setup Guide for SAP NetWeaver 7.40 and 7.50 🔗](https://documentation.suse.com/sbp/all/html/SAP-nw740-sle15-setupguide/) |
-| S/4 HANA ENSA 2                                               | Deployment of a S/4HANA in Enqueue Replication (ENSA) 2 scenario                                                           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | [SAP S/4 HANA - Enqueue Replication 2 High Availability Cluster - Setup Guide 🔗](https://documentation.suse.com/sbp/all/html/SAP-S4HA10-setupguide-sle15/index.html) |
-| S/4 HANA single PAS                                           | Deployment of a single S/4HANA PAS (primary instance)                                                                      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | [SAP S/4 HANA - Enqueue Replication 2 High Availability Cluster - Setup Guide 🔗](https://documentation.suse.com/sbp/all/html/SAP-S4HA10-setupguide-sle15/index.html) |
-| S/4 HANA High Availability Cluster                            | Deployment of a full S/4HANA stack including ASCS, ERS, PAS and AAS (multiple) instances                                   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | [SAP S/4 HANA - Enqueue Replication 2 High Availability Cluster - Setup Guide 🔗](https://documentation.suse.com/sbp/all/html/SAP-S4HA10-setupguide-sle15/index.html) |
-| Deployment in different Availability Zones/Sets               | Deployment of virtual instances in different Availability Zones/Sets for HA on hardware level                              | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :white_check_mark: | :white_check_mark: | |
+**SUSE saptune / SAP sapnotes:** SUSE's saptune is applied with the
+correct solution template to configure the sytems based on SAP
+sapnotes recommendations.  For additional information see [Tuning Systems with saptune🔗](https://documentation.suse.com/sles-sap/15-SP3/html/SLES-SAP-guide/cha-tune.html).
+
+| AWS   | Azure | GCP   | OpenStack | Libvirt |
+| :---: | :---: | :---: | :-------: | :-----: |
+| ✔     | ✔     | ✔     | ✔         | ✔       |
+
+**HANA single node:** Deployment of HANA on a single node. For
+additional information see [SAP Hardware Directory for AWS🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/#/solutions?filters=ve:23)
+
+| AWS   | Azure | GCP   | OpenStack | Libvirt |
+| :---: | :---: | :---: | :-------: | :-----: |
+| ✔     | ✔     | ✔     | ✔         | ✔       |
+
+**HANA Scale-Up - performance optimized:** Deployment of HANA with
+system replication in a performance optimized setup. For addition
+information see [SAP HANA System Replication Scale-Up - Performance Optimized Scenario🔗](https://documentation.suse.com/sbp/all/single-html/SLES4SAP-hana-sr-guide-PerfOpt-15/).
+
+| AWS   | Azure | GCP   | OpenStack | Libvirt |
+| :---: | :---: | :---: | :-------: | :-----: |
+| ✔     | ✔     | ✔     | ✔         | ✔       |
+
+**HANA Scale-Up - cost optimized:** Deployment of HANA with system
+replication in a cost optimized (additional tenant DB) setup. For
+additional information see [SAP HANA System Replication Scale-Up - Cost Optimized Scenario🔗](https://documentation.suse.com/sbp/all/html/SLES4SAP-hana-sr-guide-costopt-15/).
+
+| AWS   | Azure | GCP   | OpenStack | Libvirt |
+| :---: | :---: | :---: | :-------: | :-----: |
+| ✔     | ✔     | ✔     | ✔         | ✔       |
+
+**HANA Scale-Out - performance optimized:** Deployment of HANA
+Scale-Out (multi node) with system replication in a performance
+optimized setup. For additional information see [SAP HANA System Replication Scale-Out - Performance Optimized Scenario🔗](https://documentation.suse.com/sbp/all/html/SLES4SAP-hana-sr-guide-costopt-15/)
+and [SAP HANA System Replication Scale-Out High Availability in Amazon Web Services🔗](https://documentation.suse.com/sbp/all/html/SLES-SAP-hana-scaleOut-PerfOpt-12-AWS/).
+
+| AWS   | Azure | GCP   | OpenStack | Libvirt |
+| :---: | :---: | :---: | :-------: | :-----: |
+|  ✅    | ✔     | ✅     | ✔         | ✅       |
+
+**HANA Scale-Out - performance optimized:** Deployment of HANA
+Scale-Out (multi node) with system replication in a performance
+optimized setup. For additional infomation see [SAP HANA System Replication Scale-Out - Performance Optimized Scenario🔗](https://documentation.suse.com/sbp/all/html/SLES4SAP-hana-sr-guide-costopt-15/)
+and [SAP HANA System Replication Scale-Out High Availability in Amazon Web Services🔗](https://documentation.suse.com/sbp/all/html/SLES-SAP-hana-scaleOut-PerfOpt-12-AWS/)
+
+| AWS   | Azure | GCP   | OpenStack | Libvirt |
+| :---: | :---: | :---: | :-------: | :-----: |
+|  ✅    | ✔     | ✅     | ✔         | ✅       |
+
+**HANA Scale-Out - with standby nodes (HANA Host-Auto-Failover):**
+Deployment of HANA Scale-Out (multi node) with system replication and
+Host-Auto-Failover via standby nodes. For additional information see [Setting Up Host Auto-Failover🔗](https://help.sap.com/docs/SAP_HANA_PLATFORM/6b94445c94ae495c83a19646e7c3fd56/879d9dc46bb64ccda028872c86c70afc.html?version=2.0.05)
+and [Azure: Deploy a SAP HANA scale-out system with standby node on Azure VMs by using Azure NetApp Files on SUSE Linux Enterprise Server🔗](https://docs.microsoft.com/en-us/azure/virtual-machines/workloads/sap/sap-hana-scale-out-standby-netapp-files-suse).
+
+| AWS   | Azure | GCP   | OpenStack | Libvirt |
+| :---: | :---: | :---: | :-------: | :-----: |
+|  ✅    | ✔     | ✅     | ✔         | ✅       |
+
+**SAP S/4HANA ENSA 1:** Deployment of a SAP S/4HANA in Enqueue
+Replication (ENSA) 1 scenario. For additional information see [SAP NetWeaver Enqueue Replication 1 High Availability Cluster - Setup Guide for SAP NetWeaver 7.40 and 7.50 🔗](https://documentation.suse.com/sbp/all/html/SAP-nw740-sle15-setupguide/).
+
+| AWS   | Azure | GCP   | OpenStack | Libvirt |
+| :---: | :---: | :---: | :-------: | :-----: |
+| ✔     | ✔     | ✔     | ✔         | ✔       |
+
+**SAP S/4HANA ENSA 2:** Deployment of a S/4HANA in Enqueue Replication
+(ENSA) 2 scenario. For additional information see [SAP S/4HANA - Enqueue Replication 2 High Availability Cluster - Setup Guide 🔗](https://documentation.suse.com/sbp/all/html/SAP-S4HA10-setupguide-sle15/index.html).
+
+| AWS   | Azure | GCP   | OpenStack | Libvirt |
+| :---: | :---: | :---: | :-------: | :-----: |
+| ✔     | ✔     | ✔     | ✔         | ✔       |
+
+**SAP S/4HANA single PAS:** Deployment of a single S/4HANA PAS
+(primary instance). For additional information see [SAP S/4HANA - Enqueue Replication 2 High Availability Cluster - Setup Guide 🔗](https://documentation.suse.com/sbp/all/html/SAP-S4HA10-setupguide-sle15/index.html).
+
+| AWS   | Azure | GCP   | OpenStack | Libvirt |
+| :---: | :---: | :---: | :-------: | :-----: |
+| ✔     | ✔     | ✔     | ✔         | ✔       |
+
+**SAP S/4HANA High Availability Cluster:** Deployment of a full SAP
+S/4HANA stack including ASCS, ERS, PAS and AAS (multiple)
+instances. For additional information see [SAP S/4HANA - Enqueue Replication 2 High Availability Cluster - Setup Guide 🔗](https://documentation.suse.com/sbp/all/html/SAP-S4HA10-setupguide-sle15/index.html).
+
+| AWS   | Azure | GCP   | OpenStack | Libvirt |
+| :---: | :---: | :---: | :-------: | :-----: |
+| ✔     | ✔     | ✔     | ✔         | ✔       |
+
+**Deployment in different Availability Zones/Sets:** Deployment of
+virtual instances in different Availability Zones/Sets for HA on
+hardware level.
+
+| AWS   | Azure | GCP   | OpenStack | Libvirt |
+| :---: | :---: | :---: | :-------: | :-----: |
+|  ✔    |  ✔    |  ✔    |  ✅        |  ✅      |
 
 
 # Project Structure
