@@ -66,26 +66,23 @@ For more on various topics have a look on the following documentation:
 
 ## Features
 
+  …
+
 ## Products
 
-### SAP
+This repository supports deployment with following products:
 
-* SAP NETWEAVER 7.5 (and later)
-
-* SAP S/4HANA 1610, 1709, 1809, 1909, 2020, 2021
-
-### SUSE
-
-* SUSE Linux Enterprise Server for SAP Applications 12 SP5
-* SUSE Linux Enterprise Server for SAP Applications 15 SP3
-
-## Cloud Providers (terraform providers)
-
-* AWS
-* Azure
-* GCP
-* OpenStack
-* Libvirt 
+| Vendor    | Product                                                  | Certified Foo
+| --------- | -------------------------------------------------------- | -------------
+| SAP       | SAP NETWEAVER 7.5 (and later)                            |
+| SAP       | SAP S/4HANA 1610, 1709, 1809, 1909, 2020, 2021           |
+| SUSE      | SUSE Linux Enterprise Server for SAP Applications 12 SP5 |
+| SUSE      | SUSE Linux Enterprise Server for SAP Applications 15 SP3 |
+| Amazon    | Amazon Web Services (AWS)                                |
+| Google    | Google Cloud Platform (GCP)                              |
+| Microsoft | Azure                                                    |
+|           | OpenStack                                                |
+|           | Libvirt                                                  |
 
 
 # Project Structure
