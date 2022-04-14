@@ -163,9 +163,9 @@ First make sure to have terraform and salt installed. Clone this
 repository and follow the quickstart guides of the favored provider.
 They can be found in `./<provider/README.md>` or linked below:
 
-  - [Microsoft Azure](azure/README.md#quickstart)
-  - [Google Cloud Platform (GCP)](gcpazure/README.md#quickstart)
-  - [Amamazon Web Services (AWS)](aws/README.md#quickstart)
+  - [Microsoft Azure](azure/README.md#quickstart) (pdf guide [SUSE SAP automation guide Azure🔗](https://raw.githubusercontent.com/petersatsuse/SA-SAP-Automation/master/build/SA/SA_color_en_azure.pdf))
+  - [Google Cloud Platform (GCP)](gcpazure/README.md#quickstart) (pdf guide [SUSE SAP automation guide GCP🔗](https://raw.githubusercontent.com/petersatsuse/SA-SAP-Automation/master/build/SA/SA_color_en_gcp.pdf))
+  - [Amamazon Web Services (AWS)](aws/README.md#quickstart) (pdf guide [SUSE SAP automation guide AWS🔗](https://raw.githubusercontent.com/petersatsuse/SA-SAP-Automation/master/build/SA/SA_color_en_aws.pdf))
   - [OpenStack](openstackaws/README.md#quickstart)
   - [libvirt/KVM](libvirtaws/README.md#quickstart)
 
