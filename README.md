@@ -27,14 +27,14 @@ supported.  Furthermore _OpenStack_ and _libvirt/KVM_ can be used.
 
 # System performance and benefits
 
-![SAP architecture building blocks](doc/sap-architecture-building-blocks.png)
+![Project Components](doc/project-components.png)
 
 The diagram above shows components for an example setup. Several
 features can be enabled or disabled through configuration options to
 control the behavior of the HA Cluster, the SAP HANA and SAP S/4HANA
 or SAP NetWeaver.
 
-## Components
+## Components Details
 
  - _SAP HANA environment_: The SAP HANA deployment is configurable. It
    might be deployed as a single SAP HANA database, a dual
