@@ -70,19 +70,21 @@ For more on various topics have a look on the following documentation:
 
 ## Products
 
-This repository supports deployment with following products:
+This repository supports deployment with following products and SAP certified providers:
 
-| Vendor    | Product                                                  | Certified Foo
-| --------- | -------------------------------------------------------- | -------------
+| Vendor    | Product                                                  | SAP Certified IaaS Platforms      |
+| --------- | -------------------------------------------------------- | --------------------------------- |
 | SAP       | SAP NETWEAVER 7.5 (and later)                            |
 | SAP       | SAP S/4HANA 1610, 1709, 1809, 1909, 2020, 2021           |
 | SUSE      | SUSE Linux Enterprise Server for SAP Applications 12 SP5 |
 | SUSE      | SUSE Linux Enterprise Server for SAP Applications 15 SP3 |
-| Amazon    | Amazon Web Services (AWS)                                |
-| Google    | Google Cloud Platform (GCP)                              |
-| Microsoft | Azure                                                    |
+| Amazon    | Amazon Web Services (AWS)                                | [IaaS for AWS🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/iaas.html#categories=Amazon%20Web%20Services) |
+| Google    | Google Cloud Platform (GCP)                              | [IaaS for GCP🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/iaas.html#categories=Google%20Cloud%20Platform) |
+| Microsoft | Azure                                                    | [IaaS for Azure🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/iaas.html#categories=Microsoft%20Azure)⁺ |
 |           | OpenStack                                                |
 |           | Libvirt                                                  |
+
+  ⁺ Be carreful with Azure, **clustering** means scale-out scenario
 
 
 # Project Structure
@@ -171,17 +173,6 @@ Each provider folder contains a minimal working configuration example
 
 **Please be careful which instance type you will use! The selection of
 systems certified by SAP could lead to expensive unexpected costs.**
-
-
-## Links
-
-Find certified systems for each provider at 
-
- - [SAP Certified IaaS Platforms for AWS🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/iaas.html#categories=Amazon%20Web%20Services)
-
- - [SAP Certified IaaS Platforms for GCP🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/iaas.html#categories=Google%20Cloud%20Platform)
-
- - [SAP Certified IaaS Platforms for Azure🔗](https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/iaas.html#categories=Microsoft%20Azure) (Be carreful with Azure, **clustering** means scale-out scenario)
 
 
 # Troubleshooting
