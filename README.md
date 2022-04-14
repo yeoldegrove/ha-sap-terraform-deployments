@@ -5,10 +5,10 @@
 **Supported terraform version  `1.1.X`**
 
 * [About](#about)
-* [Components / Features / Products / Cloud Providers](#components--features--products--cloud-providers)
+* [System performance and benefits](#system-performance-and-benefits)
    * [Components](#components)
    * [Features](#features)
-   * [Products](#products)
+   * [Products and Cloud Providers](#products-and-cloud-providers)
 * [Project Structure](#project-structure)
 * [Getting started](#getting-started)
 * [Troubleshooting](#troubleshooting)
