@@ -5,11 +5,12 @@
 **Supported terraform version  `1.1.X`**
 
 * [About](#about)
-* [Components and Feature Overview](#components-and-feature-overview)
+* [Components / Features / Products / Cloud Providers](#components--features--products--cloud-providers)
+   * [Components](#components)
+   * [Features](#features)
+   * [Products](#products)
 * [Project Structure](#project-structure)
 * [Getting started](#getting-started)
-   * [Templates](#templates)
-   * [Links](#links)
 * [Troubleshooting](#troubleshooting)
 
 ___
@@ -24,7 +25,7 @@ possible. The major big cloud providers _Google Cloud Platform_
 supported.  Furthermore _OpenStack_ and _libvirt/KVM_ can be used.
 
 
-# Components / Features / Products / Cloud Providers
+# System performance and benefits
 
 ![SAP architecture building blocks](doc/sap-architecture-building-blocks.png)
 
@@ -68,7 +69,7 @@ For more on various topics have a look on the following documentation:
 
   …
 
-## Products
+## Products and Cloud Providers
 
 This repository supports deployment with following products and SAP certified providers:
 
